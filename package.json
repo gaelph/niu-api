@@ -1,0 +1,14 @@
+{
+  "name": "nezh",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/datastore": "^4.5.2",
+    "dotenv": "^8.2.0",
+    "gstore-node": "^7.2.3"
+  },
+  "scripts": {
+    "deploy": "gcloud functions deploy nezh --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region us-central1"
+  }
+}
