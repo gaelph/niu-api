@@ -10,7 +10,7 @@ const TemperatureRecord = new Schema({
 
 const listSettings = {
   limit: 100,
-  order: { property: 'created_at' }
+  order: { property: 'createdOn' }
 }
 TemperatureRecord.queries('list', listSettings)
 
