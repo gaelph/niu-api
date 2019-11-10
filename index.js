@@ -1,11 +1,12 @@
+//@ts-check
 const CONFIG = require('./config.js')
 require('./store').init(CONFIG.project)
 const TemperatureRecordService = require('./services/temperature_record')
 /**
  * Responds to any HTTP request.
  *
- * @param {!express:Request} req HTTP request context.
- * @param {!express:Response} res HTTP response context.
+ * @param {import('express').Request} req HTTP request context.
+ * @param {import('express').Response} res HTTP response context.
  */
 exports.nezh = (req, res) => {
   if (req.method == 'POST') {

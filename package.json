@@ -10,5 +10,8 @@
   },
   "scripts": {
     "deploy": "gcloud functions deploy nezh --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region us-central1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.2"
   }
 }
