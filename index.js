@@ -1,7 +1,8 @@
 //@ts-check
 const CONFIG = require('./config.js')
 require('./store').init(CONFIG.project)
-const TemperatureRecordService = require('./services/temperature_record')
+const routes = require('./routes')
+const auth = require('./services/auth')
 /**
  * Responds to any HTTP request.
  *
@@ -9,16 +10,12 @@ const TemperatureRecordService = require('./services/temperature_record')
  * @param {import('express').Response} res HTTP response context.
  */
 exports.nezh = (req, res) => {
-  if (req.method == 'POST') {
-    TemperatureRecordService.create(req.body)
-    .then(entity => {
-      res.status(201).send({ success: true, data: entity.entityData })
-    })
-    .catch(err => {
-      res.status(400).send({ success: false, error: err.message, body: JSON.stringify(req.body) })
-    })
-  }
-  else {
-    res.status(405).send();
+  try {
+    auth.check(req)
+    let route = routes.findMatchingRoute(req)
+
+    route(req, res)
+  } catch (error) {
+    res.send(error.status).send(error.message)
   }
 };
