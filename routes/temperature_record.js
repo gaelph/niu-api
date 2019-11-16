@@ -19,5 +19,16 @@ module.exports = route(
     .catch(err => {
       res.status(err.status || 400).send({ success: false, error: err.message })
     })
+  }),
+  get('/', (req, res) => {
+    let { page, pageSize } = req.query
+
+    TemperatureRecordService.list({ page, pageSize }) 
+    .then((records) => {
+      res.status(200).send({ success: true, data: records })
+    })
+    .catch(err => {
+      res.status(err.status || 400).send({ success: false, error: err.message })
+    })
   })
 )

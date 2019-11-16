@@ -45,7 +45,26 @@ async function getLatest() {
   return records[0]
 }
 
+async function list({ page = 1, pageSize = 100 }) {
+  let { entities: records } = await TemperatureRecord.list({
+    order: { 
+      property: 'createdOn', descending: true
+    },
+    limit: pageSize,
+    offset: (page - 1) * pageSize
+  })
+
+  if (records.length === 0) {
+    let error = new RequestError(404, 'No records found')
+
+    throw error
+  }
+
+  return records
+}
+
 module.exports = {
   create,
-  getLatest
+  getLatest,
+  list
 }

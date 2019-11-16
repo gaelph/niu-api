@@ -25,7 +25,7 @@
 /**
  * 
  * @param {string} path 
- * @param {(Request, Response) => void} handler 
+ * @param {RequestHandler} handler 
  * @return {{path: string, get: RequestHandler}}
  */
 function get(path, handler) {
@@ -38,7 +38,7 @@ function get(path, handler) {
 /**
  * 
  * @param {string} path 
- * @param {(Request, Response) => void} handler 
+ * @param {RequestHandler} handler 
  * @return {{path: string, post: RequestHandler}}
  */
 function post(path, handler) {
