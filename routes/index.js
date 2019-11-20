@@ -11,11 +11,13 @@
 
 /** @type {RouteCollection} */
 const TemperatureRecordRoute = require('./temperature_record');
+const RulesRoute = require('./rule')
 
 /** @type {RouterType} */
 const Router = {
   routes: {
-    ...TemperatureRecordRoute
+    ...TemperatureRecordRoute,
+    ...RulesRoute
   },
 
 }

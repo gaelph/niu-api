@@ -10,12 +10,16 @@
  * @property {string} path
  * @property {RequestHandler} [get]
  * @property {RequestHandler} [post]
+ * @property {RequestHandler} [patch]
+ * @property {RequestHandler} [del]
  */
 
 /**
  * @typedef {Object} PathHandler
  * @property {RequestHandler} [get]
  * @property {RequestHandler} [post]
+ * @property {RequestHandler} [patch]
+ * @property {RequestHandler} [del]
  */
 
 /**
@@ -48,6 +52,20 @@ function post(path, handler) {
     }
   }
 
+function patch(path, handler) {
+  return {
+    path,
+    patch: handler
+  }
+}
+
+function del(path, handler) {
+  return {
+    path,
+    del: handler
+  }
+}
+
 /**
  * 
  * @param  {RouteComponent[]} components 
@@ -71,6 +89,14 @@ function route(...components) {
 
     component.post && (
       acc[component.path] = {...handler, post: component.post}
+    )
+
+    component.patch && (
+      acc[component.path] = {...handler, patch: component.get}
+    )
+
+    component.del && (
+      acc[component.path] = {...handler, del: component.post}
     )
 
     return acc
