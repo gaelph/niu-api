@@ -12,11 +12,11 @@ const wrap = (maybeArray) => {
   return array
 }
 
-module.exports = async (body) => {
+module.exports = (body) => {
   let func = Object.keys(body)[0]
   let args = wrap(body[func])
 
-  let result = await services[func](...args)
+  console.log('executing function', func, ...args)
 
-  return result
+  return services[func](...args)
 }

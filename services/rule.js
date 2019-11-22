@@ -13,7 +13,7 @@ const { NotFound } = require('../error')
 
 const Rule = require('../models/rule')
 
-function create(value) {
+async function create(value) {
   let id = value.id
   delete value.id
   let rule = new Rule(Rule.sanitize(value, undefined))
@@ -21,14 +21,21 @@ function create(value) {
   //@ts-ignore
   rule.entityKey = Rule.key(id)
 
-  return rule.save()
+  const { entityKey, entityData } = await rule.save()
+
+  return {
+    id: entityKey.name,
+    ...entityData
+  }
 }
 
-async function list({ page = 1, pageSize = 100 }) {
+async function list({ page, pageSize } = { page: 1, pageSize: 100}) {
   let { entities: rules } = await Rule.list({
     limit: pageSize,
     offset: (page - 1) * pageSize
   })
+
+  console.log('entities', rules)
 
   return rules
 }
@@ -51,9 +58,12 @@ async function update(value) {
     }
     console.log("found entity with id", id, JSON.stringify(rule))
 
-    let updated = await Rule.update(id, value, null, null, null, { replace: true })
+    let { entityKey, entityData } = await Rule.update(id, value, null, null, null, { replace: true })
 
-    return updated
+    return {
+      id: entityKey.name,
+      ...entityData
+    }
   } catch (error) {
     console.log(JSON.stringify(error))
     throw new NotFound('Rule', id)
@@ -78,5 +88,5 @@ module.exports = {
   createRule: create,
   listRules: list,
   updateRule: update,
-  delteRule: remove
+  deleteRule: remove
 }

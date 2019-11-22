@@ -18,14 +18,14 @@ const methodCheck = req => {
  * @param {import('express').Request} req HTTP request context.
  * @param {import('express').Response} res HTTP response context.
  */
-exports.nezh = async (req, res) => {
+exports.niu = async (req, res) => {
   try {
     methodCheck(req)
     auth.check(req)
-    let data = route(req.body)
+    let data = await route(req.body)
 
     res.send({ success: true, data })
   } catch (error) {
-    res.status(error.status).send({ success: false, error: error.message })
+    res.status(error.status || 500).send({ success: false, error: error.message })
   }
 };
