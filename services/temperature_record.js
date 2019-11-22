@@ -13,7 +13,7 @@ const { NotFound, RequestError } = require("../error")
 const TemperatureRecord = require('../models/temperature_record')
 const { BadRequest, ServerError } = require('../error')
 
-function create(value) {
+async function create(value) {
   let saneValue
   try {
     saneValue = TemperatureRecord.sanitize(value, undefined)
@@ -25,7 +25,12 @@ function create(value) {
   try {
     let record = new TemperatureRecord(saneValue)
 
-    return record.save()
+    const { entityKey, entityData } = await record.save()
+
+    return {
+      id: entityKey.id,
+      ...entityData
+    }
   }
   catch (error) {
     throw new ServerError(error.message)
