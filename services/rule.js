@@ -8,7 +8,16 @@
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 
+/**
+ * @class RequestError
+ * @extends Error
+ * @property {number} RequestError.status
+ */
 class RequestError extends Error {
+  /**
+   * @param {number} status
+   * @param {string} message
+   */
   constructor(status, message) {
     super(message);
 
@@ -19,7 +28,11 @@ class RequestError extends Error {
 const Rule = require('../models/rule')
 
 function create(value) {
+  let id = value.id
+  delete value.id
   let rule = new Rule(Rule.sanitize(value, undefined))
+
+  rule.entityKey = Rule.key(id)
 
   return rule.save()
 }
@@ -40,15 +53,31 @@ async function list({ page = 1, pageSize = 100 }) {
 }
 
 async function update(value) {
-  let rule = await Rule.get(value.id)
+  let id = value.id
+  delete value.id
 
-  if (!rule) {
+  console.log('pathincg rule', id)
+
+  try {
+    // let datastore = Rule.gstore.__ds
+    // let key = datastore.key({ path: ['Rule', id] })
+    // console.log('patching', JSON.stringify(key))
+    // let [rule] = await datastore.get(key)
+    let rule = await Rule.get(id)
+
+    if (rule == null) {
+      throw new RequestError(404, 'No rules found')
+    }
+    console.log("found entity with id", id, JSON.stringify(rule))
+
+    let updated = await Rule.update(id, value, null, null, null, { replace: true })
+
+    return updated
+  } catch (error) {
+    console.log(JSON.stringify(error))
     throw new RequestError(404, 'No rules found')
   }
 
-  let updated = await Rule.update(value.id, value)
-
-  return updated
 }
 
 async function remove(id) {

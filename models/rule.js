@@ -69,15 +69,5 @@
   // schedules: { from: string, to: string, high: number }[]
  })
  
- const listSettings = {
-   limit: 100,
-   order: { 
-     property: 'createdOn', 
-     decending: true 
-   }
- }
- //@ts-ignore
- RuleSchema.queries('list', listSettings)
- 
  /** @type {Model<Rule>} */
  module.exports = gstore.model('Rule', RuleSchema)

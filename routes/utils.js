@@ -92,11 +92,11 @@ function route(...components) {
     )
 
     component.patch && (
-      acc[component.path] = {...handler, patch: component.get}
+      acc[component.path] = {...handler, patch: component.patch}
     )
 
     component.del && (
-      acc[component.path] = {...handler, del: component.post}
+      acc[component.path] = {...handler, del: component.del}
     )
 
     return acc
@@ -108,5 +108,5 @@ function route(...components) {
 }
 
 module.exports = {
-  get, post, route
+  get, post, patch, del, route
 }

@@ -25,13 +25,13 @@ module.exports = route(
   patch('/rules', (req, res) => {
     Rule.update(req.body)
     .then(updated => {
-      res.status(200).send({ success: true, data: updated })
+      res.status(200).send({ success: true, data: updated.entityData })
     })
     .catch(err => {
       res.status(err.status || 400).send({ success: false, error: err.message })
     })
   }),
-  del('/rules', (req, res) => {
+  post('/rules/delete', (req, res) => {
     let { id } = req.query
 
     Rule.remove(id)
