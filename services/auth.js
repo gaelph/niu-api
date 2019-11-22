@@ -3,6 +3,8 @@
 
 const process = require('process')
 
+const { Unauthorized } = require('../error')
+
 class AuthError extends Error {
   constructor() {
     super("Unauthorized")
@@ -20,7 +22,7 @@ function check(req) {
   let authHeader = req.header("authorization")
 
   if (!authHeader || authHeader !== `Bearer ${process.env.API_KEY}`) {
-    throw new AuthError()
+    throw new Unauthorized()
   }
 }
 

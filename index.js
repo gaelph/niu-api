@@ -1,21 +1,31 @@
 //@ts-check
 const CONFIG = require('./config.js')
 require('./store').init(CONFIG.project)
-const routes = require('./routes')
+const route = require('./routes')
 const auth = require('./services/auth')
+const { BadMethod } = require('./error')
+
+
+const methodCheck = req => {
+  if (req.method !== 'POST') {
+    throw new BadMethod(req.method)
+  }
+}
+
 /**
  * Responds to any HTTP request.
  *
  * @param {import('express').Request} req HTTP request context.
  * @param {import('express').Response} res HTTP response context.
  */
-exports.nezh = (req, res) => {
+exports.nezh = async (req, res) => {
   try {
+    methodCheck(req)
     auth.check(req)
-    let route = routes.findMatchingRoute(req)
+    let data = route(req.body)
 
-    route(req, res)
+    res.send({ success: true, data })
   } catch (error) {
-    res.send(error.status).send(error.message)
+    res.status(error.status).send({ success: false, error: error.message })
   }
 };

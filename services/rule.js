@@ -8,22 +8,8 @@
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 
-/**
- * @class RequestError
- * @extends Error
- * @property {number} RequestError.status
- */
-class RequestError extends Error {
-  /**
-   * @param {number} status
-   * @param {string} message
-   */
-  constructor(status, message) {
-    super(message);
 
-    this.status = status;
-  }
-}
+const { NotFound } = require('../error')
 
 const Rule = require('../models/rule')
 
@@ -32,6 +18,7 @@ function create(value) {
   delete value.id
   let rule = new Rule(Rule.sanitize(value, undefined))
 
+  //@ts-ignore
   rule.entityKey = Rule.key(id)
 
   return rule.save()
@@ -42,12 +29,6 @@ async function list({ page = 1, pageSize = 100 }) {
     limit: pageSize,
     offset: (page - 1) * pageSize
   })
-
-  if (rules.length === 0) {
-    let error = new RequestError(404, 'No rules found')
-
-    throw error
-  }
 
   return rules
 }
@@ -66,7 +47,7 @@ async function update(value) {
     let rule = await Rule.get(id)
 
     if (rule == null) {
-      throw new RequestError(404, 'No rules found')
+      throw new NotFound
     }
     console.log("found entity with id", id, JSON.stringify(rule))
 
@@ -75,7 +56,7 @@ async function update(value) {
     return updated
   } catch (error) {
     console.log(JSON.stringify(error))
-    throw new RequestError(404, 'No rules found')
+    throw new NotFound('Rule', id)
   }
 
 }
@@ -84,7 +65,7 @@ async function remove(id) {
   let rule = await Rule.get(id)
 
   if (!rule) {
-    throw new RequestError(404, 'No rules found')
+    throw new NotFound('Rule', id)
   }
 
   await Rule.delete(id)
@@ -94,8 +75,8 @@ async function remove(id) {
 
 
 module.exports = {
-  create,
-  list,
-  update,
-  remove
+  createRule: create,
+  listRules: list,
+  updateRule: update,
+  delteRule: remove
 }

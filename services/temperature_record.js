@@ -8,63 +8,74 @@
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 
-class RequestError extends Error {
-  constructor(status, message) {
-    super(message);
-
-    this.status = status;
-  }
-}
+const { NotFound, RequestError } = require("../error")
 
 const TemperatureRecord = require('../models/temperature_record')
+const { BadRequest, ServerError } = require('../error')
 
 function create(value) {
-  let record = new TemperatureRecord(TemperatureRecord.sanitize(value, undefined))
+  let saneValue
+  try {
+    saneValue = TemperatureRecord.sanitize(value, undefined)
+  }
+  catch (error) {
+    throw new BadRequest(error.message)
+  }
 
-  return record.save()
+  try {
+    let record = new TemperatureRecord(saneValue)
+
+    return record.save()
+  }
+  catch (error) {
+    throw new ServerError(error.message)
+  }
 }
 
 /**
  * @return {Promise<TemperatureRecord, RequestError>}
  */
 async function getLatest() {
-  let { entities: records } = await TemperatureRecord.list({
-    order: { 
-      property: 'createdOn', descending: true
-    },
-    limit: 1
-  })
-  
-  if (records.length === 0) {
-    let error = new RequestError(404, 'No records found')
+  try {
+    let { entities: records } = await TemperatureRecord.list({
+      order: { 
+        property: 'createdOn', descending: true
+      },
+      limit: 1
+    })
     
-    throw error
+    if (records.length === 0) {
+      let error = new NotFound('TemperatureRecord', 'latest')
+      
+      throw error
+    }
+    
+    //@ts-ignore
+    return records[0]
   }
-  
-  //@ts-ignore
-  return records[0]
+  catch (error) {
+    throw new ServerError(error.message)
+  }
 }
 
 async function list({ page = 1, pageSize = 100 }) {
-  let { entities: records } = await TemperatureRecord.list({
-    order: { 
-      property: 'createdOn', descending: true
-    },
-    limit: pageSize,
-    offset: (page - 1) * pageSize
-  })
+  try {
+    let { entities: records } = await TemperatureRecord.list({
+      order: { 
+        property: 'createdOn', descending: true
+      },
+      limit: pageSize,
+      offset: (page - 1) * pageSize
+    })
 
-  if (records.length === 0) {
-    let error = new RequestError(404, 'No records found')
-
-    throw error
+    return records
+  } catch (error) {
+    throw new ServerError(error.message)
   }
-
-  return records
 }
 
 module.exports = {
-  create,
-  getLatest,
-  list
+  createTemperatureRecord: create,
+  getLatestTemperatureRecord: getLatest,
+  listTemperatureRecords: list
 }
