@@ -9,7 +9,7 @@
  */
 
 
-const { NotFound } = require('../error')
+const { NotFound, BadRequest } = require('../error')
 
 const Rule = require('../models/rule')
 
@@ -54,24 +54,28 @@ async function update(value) {
     let rule = await Rule.get(id)
 
     if (rule == null) {
-      throw new NotFound
+      throw new NotFound('Rule', id)
     }
     console.log("found entity with id", id, JSON.stringify(rule))
 
-    let { entityKey, entityData } = await Rule.update(id, value, null, null, null, { replace: true })
+    let { entityKey, entityData } = await Rule.update(id, value, null, null, null, { replace: false })
 
     return {
       id: entityKey.name,
       ...entityData
     }
   } catch (error) {
-    console.log(JSON.stringify(error))
-    throw new NotFound('Rule', id)
+    let message = error.message
+    if (error.name && error.errors) {
+      message = error.errors.map(({ message }) => message).join(' ')
+    } 
+    console.log(JSON.stringify(message))
+    throw new BadRequest(message)
   }
 
 }
 
-async function remove(id) {
+async function remove({ id }) {
   let rule = await Rule.get(id)
 
   if (!rule) {

@@ -52,7 +52,7 @@
   * @type {Schema<Rule, Object<String, CustomEntityFunction<Rule>>> } 
   */
  const RuleSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: false },
   active: { type: Boolean, required: true },
   days: { type: Object, required: true },
   // days: {
