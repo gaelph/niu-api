@@ -8,7 +8,8 @@
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 
-
+/** */
+const axios = require('axios')
 const { NotFound, BadRequest } = require('../error')
 
 const Rule = require('../models/rule')
@@ -22,6 +23,10 @@ async function create(value) {
   rule.entityKey = Rule.key(id)
 
   const { entityKey, entityData } = await rule.save()
+
+  // Signal device(s)
+  // no need to await the result
+  send_rules_to_device()
 
   return {
     id: entityKey.name,
@@ -60,6 +65,10 @@ async function update(value) {
 
     let { entityKey, entityData } = await Rule.update(id, value, null, null, null, { replace: false })
 
+    // Signal device(s)
+    // no need to await the result
+    send_rules_to_device()
+
     return {
       id: entityKey.name,
       ...entityData
@@ -81,10 +90,36 @@ async function remove({ id }) {
   if (!rule) {
     throw new NotFound('Rule', id)
   }
-
+  
   await Rule.delete(id)
 
+  // Signal device(s)
+  // no need to await the result
+  send_rules_to_device()
+
   return
+}
+
+async function send_rules_to_device() {
+  let rules = await list()
+
+  //@ts-ignore
+  let response = await axios.post(
+    process.env.DEVICE_URL, 
+    JSON.stringify({ rules }),
+    {
+      headers: {
+        "Authorization": `Bearer ${process.env.API_KEY}`,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+
+  if (response.status !== 200) {
+    let text = response.data
+
+    console.error(text)
+  }
 }
 
 
