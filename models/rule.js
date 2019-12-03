@@ -43,9 +43,10 @@
   * @property {boolean} active
   * @property {Days} days
   * @property {boolean} repeat
+  * @property {Date[]} next_dates
   * @property {Schedule[]} schedules
-  * @property {Date} [createdOn]
-  * @property {Date} [modifiedOn]
+  * @property {Date} createdOn
+  * @property {Date} modifiedOn
   */
  
  /**
@@ -65,7 +66,10 @@
   //   [Day.Sun]: boolean,
   // },
   repeat: { type: Boolean, required: true },
+  next_dates: { type: Array, required: false, default: [] },
   schedules: { type: Array, required: true },
+  createdOn: { type: Date, default: gstore.defaultValues.NOW },
+  modifiedOn: { type: Date }
   // schedules: { from: string, to: string, high: number }[]
  })
  
