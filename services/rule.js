@@ -105,7 +105,7 @@ async function send_rules_to_device() {
 
   //@ts-ignore
   let response = await axios.post(
-    process.env.DEVICE_URL, 
+    `${process.env.DEVICE_URL}/rules`, 
     JSON.stringify({ rules }),
     {
       headers: {
