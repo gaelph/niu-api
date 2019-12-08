@@ -31,7 +31,7 @@ async function create(value) {
   // TODO: send settings update to device
   // Signal device(s)
   // no need to await the result
-  // send_rules_to_device()
+  send_settings_to_device()
 
   return {
     ...entityData,
@@ -72,7 +72,8 @@ async function update(value) {
     // TODO: send settings update to device
     // Signal device(s)
     // no need to await the result
-    // send_rules_to_device()
+    send_settings_to_device()
+
     return {
       id: entityKey.name,
       ...entityData
@@ -84,6 +85,28 @@ async function update(value) {
     } 
     console.log(JSON.stringify(message))
     throw new BadRequest(message)
+  }
+}
+
+async function send_settings_to_device() {
+  let settings = await list()
+
+  //@ts-ignore
+  let response = await axios.post(
+    `${process.env.DEVICE_URL}/settings`, 
+    JSON.stringify({ settings }),
+    {
+      headers: {
+        "Authorization": `Bearer ${process.env.API_KEY}`,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }
+    })
+
+  if (response.status !== 200) {
+    let text = response.data
+
+    console.error(text)
   }
 }
 
