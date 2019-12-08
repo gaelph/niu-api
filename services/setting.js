@@ -8,6 +8,8 @@
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 
+ /** */
+const axios = require('axios')
 const { NotFound, RequestError, BadRequest, ServerError } = require("../error")
 
 const Setting = require('../models/setting')
