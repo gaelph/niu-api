@@ -50,10 +50,9 @@ async function list() {
 
 async function update(value) {
   let id = value.id
-  delete value.id
-
+  
   console.log('patching setting', id)
-
+  
   try {
     // let datastore = Rule.gstore.__ds
     // let key = datastore.key({ path: ['Rule', id] })
@@ -65,6 +64,7 @@ async function update(value) {
     } catch (_) {
       return await create(value)
     }
+    delete value.id
     console.log("update setting", id, value.value)
 
     let { entityKey, entityData } = await Setting.update(id, value, null, null, null, { replace: false })
