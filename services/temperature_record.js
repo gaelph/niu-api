@@ -4,7 +4,6 @@
  * @typedef {import("gstore-node/lib/types").EntityData<T>} EntityData
  */
 /**
- * @template T
  * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
  */
 

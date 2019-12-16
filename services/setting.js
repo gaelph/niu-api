@@ -27,10 +27,8 @@ async function create(value) {
   //@ts-ignore
   setting.entityKey = Setting.key(id)
 
-  console.log('create setting', id, value.value)
   const { entityKey, entityData } = await setting.save()
 
-  // TODO: send settings update to device
   // Signal device(s)
   // no need to await the result
   send_settings_to_device()
@@ -45,33 +43,22 @@ async function create(value) {
 async function list() {
   let { entities: settings } = await Setting.list()
 
-  console.log('entities', settings)
-
   return settings
 }
 
 async function update(value) {
   let id = value.id
   
-  console.log('patching setting', id)
-  
   try {
-    // let datastore = Rule.gstore.__ds
-    // let key = datastore.key({ path: ['Rule', id] })
-    // console.log('patching', JSON.stringify(key))
-    // let [rule] = await datastore.get(key)
-    let setting
     try {
-      setting = await Setting.get(id)
+      await Setting.get(id)
     } catch (_) {
       return await create(value)
     }
     delete value.id
-    console.log("update setting", id, value.value)
 
     let { entityKey, entityData } = await Setting.update(id, value, null, null, null, { replace: false })
 
-    // TODO: send settings update to device
     // Signal device(s)
     // no need to await the result
     send_settings_to_device()
@@ -93,23 +80,21 @@ async function update(value) {
 async function send_settings_to_device() {
   let settings = await list()
 
-  //@ts-ignore
-  let response = await axios.post(
-    `${process.env.DEVICE_URL}/settings`, 
-    JSON.stringify({ settings }),
-    {
-      headers: {
-        "Authorization": `Bearer ${process.env.API_KEY}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }
-    })
-
-  if (response.status !== 200) {
-    let text = response.data
-
-    console.error(text)
-  }
+  try {
+    //@ts-ignore
+    await axios.post(
+      `${process.env.DEVICE_URL}/settings`, 
+      JSON.stringify({ settings }),
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+    } catch (error) {
+      console.error(error.message)
+    }
 }
 
 module.exports = {

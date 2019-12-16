@@ -24,7 +24,6 @@ async function create(value) {
   //@ts-ignore
   override.entityKey = Override.key(id)
 
-  console.log('create Override', id, value.value)
   const { entityKey, entityData } = await override.save()
 
   // TODO: send Overrides update to device
@@ -51,24 +50,15 @@ async function get() {
     limit: 1
   })
 
-  console.log('entities', overrides)
-
   return overrides[0]
 }
 
 async function update(value) {
   let id = value.id
   
-  console.log('patching Override', id)
-  
   try {
-    // let datastore = Rule.gstore.__ds
-    // let key = datastore.key({ path: ['Rule', id] })
-    // console.log('patching', JSON.stringify(key))
-    // let [rule] = await datastore.get(key)
-    let override
     try {
-      override = await Override.get(id)
+      await Override.get(id)
     } catch (_) {
       return await create(value)
     }
@@ -77,7 +67,6 @@ async function update(value) {
 
     let { entityKey, entityData } = await Override.update(id, value, null, null, null, { replace: false })
 
-    // TODO: send Overrides update to device
     // Signal device(s)
     // no need to await the result
     send_overrides_to_device()
@@ -96,30 +85,45 @@ async function update(value) {
   }
 }
 
+async function remove({ id }) {
+  let override = await Override.get(id)
+
+  if (!override) {
+    throw new NotFound('Override', id)
+  }
+  
+  await Override.delete(id)
+
+  // Signal device(s)
+  // no need to await the result
+  send_overrides_to_device()
+
+  return
+}
+
 async function send_overrides_to_device() {
   let override = await get()
 
-  //@ts-ignore
-  let response = await axios.post(
-    `${process.env.DEVICE_URL}/override`, 
-    JSON.stringify({ override }),
-    {
-      headers: {
-        "Authorization": `Bearer ${process.env.API_KEY}`,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }
-    })
-
-  if (response.status !== 200) {
-    let text = response.data
-
-    console.error(text)
+  try {
+    //@ts-ignore
+    await axios.post(
+      `${process.env.DEVICE_URL}/override`, 
+      JSON.stringify({ override }),
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+  } catch (error) {
+    console.error(error.message)
   }
 }
 
 module.exports = {
   createOverride: create,
   getOverride: get,
-  updateOverride: update
+  updateOverride: update,
+  deleteOverride: remove,
 }
