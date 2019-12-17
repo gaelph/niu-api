@@ -96,7 +96,7 @@ async function remove({ id }) {
 
   // Signal device(s)
   // no need to await the result
-  send_overrides_to_device()
+  send_empty_overrides_to_device()
 
   return
 }
@@ -107,8 +107,27 @@ async function send_overrides_to_device() {
   try {
     //@ts-ignore
     await axios.post(
-      `${process.env.DEVICE_URL}/override`, 
-      JSON.stringify({ override }),
+      `${process.env.DEVICE_URL}/holds`, 
+      JSON.stringify({ holds: [override] }),
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      })
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
+
+async function send_empty_overrides_to_device() {
+  try {
+    //@ts-ignore
+    await axios.post(
+      `${process.env.DEVICE_URL}/holds`, 
+      JSON.stringify({ holds: [] }),
       {
         headers: {
           "Authorization": `Bearer ${process.env.API_KEY}`,
