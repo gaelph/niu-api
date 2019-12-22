@@ -17,7 +17,9 @@ const Event = require('../models/event')
  */
 async function create(value) {
   value.value = value.value.toString()
-  
+  delete value.createdOn
+  delete value.modifiedOn
+
   let override = new Event(Event.sanitize(value, undefined))
 
   const { entityKey, entityData } = await override.save()
