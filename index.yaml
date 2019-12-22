@@ -1,0 +1,7 @@
+indexes: 
+
+- kind: Event
+  properties: 
+  - name: type
+  - name: modifiedOn
+    direction: desc
