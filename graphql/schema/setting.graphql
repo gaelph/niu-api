@@ -3,7 +3,7 @@
 type Setting {
   id: ID!
   title: String
-  description: String!
+  description: String
   value: String!
   createdOn: Date!
   modifiedOn: Date!
