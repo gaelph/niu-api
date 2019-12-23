@@ -8,6 +8,8 @@
 
 # import Hold from "hold.graphql"
 
+# import Setting from "setting.graphql"
+
 type Query {
   """
   Temperature Records
@@ -32,4 +34,9 @@ type Query {
   Holds
   """
   getHold: Hold
+
+  """
+  Settings
+  """
+  listSettings: [Setting]!
 }

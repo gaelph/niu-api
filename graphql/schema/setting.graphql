@@ -1,0 +1,23 @@
+#import Date from "./scalars.graphql"
+
+type Setting {
+  id: ID!
+  title: String!
+  description: String!
+  value: String!
+  createdOn: Date!
+  modifiedOn: Date!
+}
+
+input CreateSettingInput {
+  id: ID!
+  title: String!
+  description: String!
+  value: String!
+}
+
+input UpdateSettingInput {
+  id: ID!
+  value: String!
+}
+

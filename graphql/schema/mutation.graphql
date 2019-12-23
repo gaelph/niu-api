@@ -9,6 +9,9 @@
 # import DeleteRuleInput from "./rule.graphql"
 # import Rule from "./rule.graphql"
 
+# import CreateSettingInput from "./setting.graphql"
+# import UpdateSettingInput from "./setting.graphql"
+
 type Mutation {
   # TemperatureRecord Mutations
   createTemperatureRecord(value: Float!): TemperatureRecord
@@ -25,4 +28,8 @@ type Mutation {
   createHold(hold: CreateHoldInput): Hold
   updateHold(hold: UpdateHoldInput): Hold
   deleteHold(id: ID!): Hold
+
+  # Setting Mutations
+  createSetting(setting: CreateSettingInput): Setting
+  updateSetting(setting: UpdateSettingInput): Setting
 }
