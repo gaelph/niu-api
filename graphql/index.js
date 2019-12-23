@@ -9,8 +9,7 @@ const typeDefs = gql(importSchema('graphql/schema/query.graphql'))
 const auth = require('../services/auth')
 const TemperatureRecord = require('../services/temperature_record')
 const Event = require('../services/event')
-
-console.log('graphql Schema', typeDefs)
+const Rule = require('../services/rule')
 
 const resolvers = {
   Query: {
@@ -40,6 +39,12 @@ const resolvers = {
     },
     getAllEventsType: (_, { type, page = 1, pageSize = 100 }) => {
       return Event.getAllEventsType({ type, page, pageSize })
+    },
+
+    // --------------------------------
+    // Rule Queries
+    listRules: (_, { page = 1, pageSize = 100 }) => {
+      return Rule.listRules({ page, pageSize })
     }
   },
   Mutation: {
@@ -68,6 +73,17 @@ const resolvers = {
 
       return null
     }
+  }),
+  // Custom Days type because of how Typescript handles enum, :-(
+  Days: new GraphQLScalarType({
+    name: 'Days',
+    description: 'Days of the week a Rule is active for',
+    parseValue: value => {
+      return value
+    },
+    serialize: obj => {
+      return obj
+    },
   }),
   // Using custom enum value to comply with how rust handles things
   EventType: {

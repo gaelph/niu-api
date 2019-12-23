@@ -3,6 +3,9 @@
 
 # import Event from "event.graphql"
 # import EventType from "event.graphql"
+
+# import Rule from "rule.graphql"
+
 type Query {
   """
   Temperature Records
@@ -17,4 +20,9 @@ type Query {
   getLatestEventType(type: EventType): Event,
   getAllEvents(page: Int, pageSize: Int): [Event]!,
   getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!,
+
+  """
+  Rules
+  """
+  listRules(page: Int, pageSize: Int): [Rule]!
 }

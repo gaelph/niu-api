@@ -1,0 +1,24 @@
+#import Date from "./scalars.graphql"
+#import Days from "./scalars.graphql"
+
+type Time {
+  hour: Int!,
+  minute: Int!
+}
+
+type Schedule {
+  from: Time!,
+  to: Time!,
+  high: Int!
+}
+
+type Rule {
+  id: ID!,
+  name: String,
+  active: Boolean!,
+  days: Days!,
+  next_dates: [Date]!,
+  schedules: [Schedule]!,
+  createdOn: Date!,
+  modifiedOn: Date!
+}
