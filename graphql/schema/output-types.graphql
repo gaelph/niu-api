@@ -1,0 +1,8 @@
+scalar Date
+
+type TemperatureRecord {
+  id: ID!,
+  value: Float!,
+  createdOn: Date!,
+  modifiedOn: Date!
+}

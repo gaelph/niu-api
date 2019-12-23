@@ -1,0 +1,8 @@
+input TemperatureInput {
+  value: Float!
+}
+
+input Cursor {
+  page: Int!
+  pageSize: Int!
+}
