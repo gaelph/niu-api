@@ -62,6 +62,12 @@ const resolvers = {
     // Rule Mutations
     createRule: (_, { rule }) => {
       return Rule.createRule(rule)
+    },
+    updateRule: (_, { rule }) => {
+      return Rule.updateRule(rule)
+    },
+    deleteRule: (_, { rule: { id }}) => {
+      return Rule.deleteRule({ id })
     }
   },
   // Custom Date type to consistently use ISO date format

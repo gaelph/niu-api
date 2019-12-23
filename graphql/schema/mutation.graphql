@@ -4,7 +4,9 @@
 # import EventInput from "./event.graphql"
 # import Event from "./event.graphql"
 
-# import RuleImput from "./rule.graphql"
+# import CreateRuleInput from "./rule.graphql"
+# import UpdateRuleInput from "./rule.graphql"
+# import DeleteRuleInput from "./rule.graphql"
 # import Rule from "./rule.graphql"
 
 type Mutation {
@@ -15,5 +17,7 @@ type Mutation {
   dispatchEvent(event: EventInput): Event
 
   # Rule Mutations
-  createRule(rule: RuleInput): Rule
+  createRule(rule: CreateRuleInput): Rule
+  updateRule(rule: UpdateRuleInput): Rule
+  deleteRule(rule: DeleteRuleInput): Rule
 }

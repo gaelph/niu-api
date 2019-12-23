@@ -35,7 +35,7 @@ type Rule {
   modifiedOn: Date!
 }
 
-input RuleInput {
+input CreateRuleInput {
   id: ID!
   name: String,
   active: Boolean!,
@@ -43,4 +43,18 @@ input RuleInput {
   days: Days!,
   next_dates: [Date]!,
   schedules: [ScheduleInput]!
+}
+
+input UpdateRuleInput {
+  id: ID!
+  name: String,
+  active: Boolean,
+  repeat: Boolean,
+  days: Days,
+  next_dates: [Date],
+  schedules: [ScheduleInput]
+}
+
+input DeleteRuleInput {
+  id: ID!
 }
