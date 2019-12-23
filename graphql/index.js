@@ -14,6 +14,7 @@ console.log('graphql Schema', typeDefs)
 
 const resolvers = {
   Query: {
+
     // --------------------------------
     // TemperatureRecord Queries
     getLatestTemperatureRecord: () => {
@@ -25,6 +26,7 @@ const resolvers = {
 
       return TemperatureRecord.listTemperatureRecords({ page, pageSize })
     },
+
     // --------------------------------
     // Event Queries
     getLatestEvent: () => {

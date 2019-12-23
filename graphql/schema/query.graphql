@@ -8,13 +8,13 @@ type Query {
   Temperature Records
   """
   getLatestTemperatureRecord: TemperatureRecord,
-  listTemperatureRecords(page: Int, pageSize: Int): [TemperatureRecord]!
+  listTemperatureRecords(page: Int, pageSize: Int): [TemperatureRecord]!,
 
   """
   Events
   """
-  getLatestEvent(): Event
-  getLatestEventType(type: EventType): Event
-  getAllEvents(page: Int, pageSize: Int): [Event]!
-  getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!
+  getLatestEvent: Event,
+  getLatestEventType(type: EventType): Event,
+  getAllEvents(page: Int, pageSize: Int): [Event]!,
+  getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!,
 }
