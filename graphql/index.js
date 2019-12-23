@@ -32,7 +32,6 @@ const resolvers = {
       return Event.getLatestEvent()
     },
     getLatestEventType: (_, { type }) => {
-      console.log('type', type)
       return Event.getLatestEventType({ type })
     },
     getAllEvents: (_, { page = 1, pageSize = 100 }) => {
