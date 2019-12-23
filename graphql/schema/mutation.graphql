@@ -20,4 +20,9 @@ type Mutation {
   createRule(rule: CreateRuleInput): Rule
   updateRule(rule: UpdateRuleInput): Rule
   deleteRule(rule: DeleteRuleInput): Rule
+
+  # Hold Mutations
+  createHold(hold: CreateHoldInput): Hold
+  updateHold(hold: UpdateHoldInput): Hold
+  deleteHold(id: ID!): Hold
 }

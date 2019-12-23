@@ -1,0 +1,20 @@
+# import Date from "./scalars.graphql"
+
+type Hold {
+  id: ID!
+  value: Int!
+  untilTime: Date!
+  createdOn: Date!
+  modifiedOn: Date!
+}
+
+input CreateHoldInput {
+  value: Int!
+  untilTime: Date!
+}
+
+input UpdateHoldInput {
+  id: ID!
+  value: Hold
+  untilTime: Date
+}

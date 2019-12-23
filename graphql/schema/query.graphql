@@ -6,6 +6,8 @@
 
 # import Rule from "rule.graphql"
 
+# import Hold from "hold.graphql"
+
 type Query {
   """
   Temperature Records
@@ -25,4 +27,9 @@ type Query {
   Rules
   """
   listRules(page: Int, pageSize: Int): [Rule]!
+
+  """
+  Holds
+  """
+  getHold: Hold
 }

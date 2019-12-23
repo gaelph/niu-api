@@ -10,6 +10,7 @@ const auth = require('../services/auth')
 const TemperatureRecord = require('../services/temperature_record')
 const Event = require('../services/event')
 const Rule = require('../services/rule')
+const Hold = require('../services/override')
 
 const resolvers = {
   Query: {
@@ -45,6 +46,12 @@ const resolvers = {
     // Rule Queries
     listRules: (_, { page = 1, pageSize = 100 }) => {
       return Rule.listRules({ page, pageSize })
+    },
+
+    // --------------------------------
+    // Hold Queries
+    getHold: () => {
+      return Hold.getOverride()
     }
   },
   Mutation: {
@@ -53,11 +60,13 @@ const resolvers = {
     createTemperatureRecord: (_, { value }) => {
       return TemperatureRecord.createTemperatureRecord({ value })
     },
+
     // --------------------------------
     // Event Mutations
     dispatchEvent: (_, { type, value }) => {
       return Event.dispatchEvent({ type, value })
     },
+
     // --------------------------------
     // Rule Mutations
     createRule: (_, { rule }) => {
@@ -68,7 +77,20 @@ const resolvers = {
     },
     deleteRule: (_, { rule: { id }}) => {
       return Rule.deleteRule({ id })
+    },
+
+    // -------------------------------
+    // Hold Mutations
+    createHold: (_, { hold }) => {
+      return Hold.createOverride(hold)
+    },
+    updateHold: (_, { hold }) => {
+      return Hold.updateOverride(hold)
+    },
+    deleteHold: (_, { id }) => {
+      return Hold.deleteOverride({ id })
     }
+    
   },
   // Custom Date type to consistently use ISO date format
   Date: new GraphQLScalarType({
