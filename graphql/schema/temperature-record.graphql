@@ -1,4 +1,8 @@
-scalar Date
+# import Date from "./scalars.graphql"
+
+input TemperatureInput {
+  value: Float!
+}
 
 type TemperatureRecord {
   id: ID!,

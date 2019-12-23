@@ -1,0 +1,18 @@
+# import Date from "./scalars.graphql"
+
+enum EventType {
+  BOILER_STATUS
+}
+
+type EventInput {
+  type: EventType!,
+  value: String!
+}
+
+type Event {
+  id: ID!,
+  type: EventType!,
+  value: String!,
+  createdOn: Date!,
+  modifiedOn: Date!
+}

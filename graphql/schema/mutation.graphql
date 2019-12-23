@@ -1,6 +1,10 @@
-# import TemperatureInput from "./input-types.graphql"
-# import TemperatureRecord from "./output-types.graphql"
+# import TemperatureInput from "./temperature-record.graphql"
+# import TemperatureRecord from "./temperature-record.graphql"
+
+# import EventInput from "./event.graphql"
+# import Event from "./event.graphql"
 
 type Mutation {
   createTemperatureRecord(value: Float!): TemperatureRecord
+  dispatchEvent(event: EventInput): Event
 }

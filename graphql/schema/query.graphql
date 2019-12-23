@@ -1,18 +1,20 @@
-# import TemperatureRecord from "output-types.graphql"
+# import TemperatureRecord from "temperature-record.graphql"
 # import Mutation from "mutation.graphql"
-# import Cursor from "input-types.graphql"
 
+# import Event from "event.graphql"
+# import EventType from "event.graphql"
 type Query {
   """
-  Hello World query
-  """
-  hello: String!
-  """
-  Returns the latest inserted Temperature Record
+  Temperature Records
   """
   getLatestTemperatureRecord: TemperatureRecord,
-  """
-  Returns a paginated list of Temperature Records
-  """
   listTemperatureRecords(page: Int, pageSize: Int): [TemperatureRecord]!
+
+  """
+  Events
+  """
+  getLatestEvent(): Event
+  getLatestEventType(type: EventType): Event
+  getAllEvents(page: Int, pageSize: Int): [Event]!
+  getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!
 }

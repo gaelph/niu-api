@@ -8,12 +8,14 @@ const typeDefs = gql(importSchema('graphql/schema/query.graphql'))
 
 const auth = require('../services/auth')
 const TemperatureRecord = require('../services/temperature_record')
+const Event = require('../services/event')
 
 console.log('graphql Schema', typeDefs)
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello',
+    // --------------------------------
+    // TemperatureRecord Queries
     getLatestTemperatureRecord: () => {
       return TemperatureRecord.getLatestTemperatureRecord()
     },
@@ -22,13 +24,35 @@ const resolvers = {
       const pageSize = arg.pageSize || 100
 
       return TemperatureRecord.listTemperatureRecords({ page, pageSize })
+    },
+    // --------------------------------
+    // Event Queries
+    getLatestEvent: () => {
+      return Event.getLatestEvent()
+    },
+    getLatestEventType: (_, { type }) => {
+      return Event.getLatestEventType(type)
+    },
+    getAllEvents: (_, { page = 1, pageSize = 100 }) => {
+      return Event.getAllEvents({ page, pageSize })
+    },
+    getAllEventsType: (_, { type, page = 1, pageSize = 100 }) => {
+      return Event.getAllEventsType({ type, page, pageSize })
     }
   },
   Mutation: {
+    // --------------------------------
+    // TemperatureRecord Mutationa
     createTemperatureRecord: (_, { value }) => {
       return TemperatureRecord.createTemperatureRecord({ value })
+    },
+    // --------------------------------
+    // Event Mutations
+    dispatchEvent: (_, { type, value }) => {
+      return Event.dispatchEvent({ type, value })
     }
   },
+  // Custom Date type to consistently use ISO date format
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date type using ISO string as serialized value',
@@ -42,7 +66,11 @@ const resolvers = {
 
       return null
     }
-  })
+  }),
+  // Using custom enum value to comply with how rust handles things
+  EventType: {
+    BOILER_STATUS: "BoilerStatus"
+  }
 }
 
 const server = new ApolloServer({
