@@ -60,7 +60,7 @@ async function getLatest() {
  */
 async function getLatestByType({ type }) {
   if (!Object.values(Event.Types).includes(type)) {
-    throw new BadRequest('Invalid event type')
+    throw new BadRequest(`Invalid event type ${type}`)
   }
 
   let { entities: events } = await Event.list({
@@ -92,7 +92,7 @@ async function getAll({ page, pageSize }) {
       property: 'modifiedOn',
       descending: true
     },
-    offset: page * pageSize,
+    offset: (page - 1) * pageSize,
     limit: pageSize
   })
 
