@@ -4,7 +4,7 @@ enum EventType {
   BOILER_STATUS
 }
 
-type EventInput {
+input EventInput {
   type: EventType!,
   value: String!
 }
