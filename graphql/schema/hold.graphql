@@ -15,6 +15,6 @@ input CreateHoldInput {
 
 input UpdateHoldInput {
   id: ID!
-  value: Hold
+  value: Int!
   untilTime: Date
 }
