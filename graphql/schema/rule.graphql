@@ -2,8 +2,13 @@
 #import Days from "./scalars.graphql"
 
 type Time {
-  hour: Int!,
-  minute: Int!
+  hours: Int!,
+  minutes: Int!
+}
+
+input TimeInput {
+  hours: Int!,
+  minutes: Int!
 }
 
 type Schedule {
@@ -12,13 +17,30 @@ type Schedule {
   high: Int!
 }
 
+input ScheduleInput {
+  from: TimeInput!,
+  to: TimeInput!,
+  high: Int!
+}
+
 type Rule {
   id: ID!,
   name: String,
   active: Boolean!,
+  repeat: Boolean!,
   days: Days!,
   next_dates: [Date]!,
   schedules: [Schedule]!,
   createdOn: Date!,
   modifiedOn: Date!
+}
+
+input RuleInput {
+  id: ID!
+  name: String,
+  active: Boolean!,
+  repeat: Boolean!,
+  days: Days!,
+  next_dates: [Date]!,
+  schedules: [ScheduleInput]!
 }

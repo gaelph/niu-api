@@ -4,7 +4,16 @@
 # import EventInput from "./event.graphql"
 # import Event from "./event.graphql"
 
+# import RuleImput from "./rule.graphql"
+# import Rule from "./rule.graphql"
+
 type Mutation {
+  # TemperatureRecord Mutations
   createTemperatureRecord(value: Float!): TemperatureRecord
+
+  # Event Mutations
   dispatchEvent(event: EventInput): Event
+
+  # Rule Mutations
+  createRule(rule: RuleInput): Rule
 }

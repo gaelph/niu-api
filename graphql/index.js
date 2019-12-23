@@ -57,6 +57,11 @@ const resolvers = {
     // Event Mutations
     dispatchEvent: (_, { type, value }) => {
       return Event.dispatchEvent({ type, value })
+    },
+    // --------------------------------
+    // Rule Mutations
+    createRule: (_, { rule }) => {
+      return Rule.createRule(rule)
     }
   },
   // Custom Date type to consistently use ISO date format
