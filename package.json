@@ -13,6 +13,11 @@
     "gstore-node": "^7.2.3"
   },
   "scripts": {
+    "datastore:start": "gcloud beta emulators datastore start --no-store-on-disk &",
+    "datastore:stop": "for pid in $(ps -aef | grep cloud-datastore-emulator/CloudDatastore.jar | awk '{ print $2 }'); do kill $pid; done; yarn datastore:unset-env",
+    "datastore:set-env": "$(gcloud beta emulators datastore env-init)",
+    "datastore:unset-env": "$(gcloud beta emulators datastore env-unset)",
+    "test": "yarn datastore:start; yarn datastore:set-env; jest; yarn datastore:stop",
     "update-index": "export $(egrep -v '^#' $PWD/.env | xargs); gcloud datastore indexes create $PWD/index.yaml --project=$PROJECT",
     "deploy": "export $(egrep -v '^#' $PWD/.env | xargs); gcloud functions deploy niu --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region europe-west1 --project $PROJECT"
   },
