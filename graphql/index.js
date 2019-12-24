@@ -4,7 +4,17 @@ const { importSchema } = require('graphql-import')
 const { GraphQLScalarType } = require('graphql')
 const { Kind } = require('graphql/language')
 
-const typeDefs = gql(importSchema('graphql/schema/query.graphql'))
+const loader = require('./loader')
+const Schema = loader.load([
+  './schema/index.graphql',
+  './schema/scalars.graphql',
+  './schema/temperature-record.graphql',
+  './schema/rule.graphql',
+  './schema/hold.graphql',
+  './schema/setting.graphql',
+  './schema/event.graphql'
+])
+const typeDefs = gql(Schema)
 
 const auth = require('../services/auth')
 const TemperatureRecord = require('../services/temperature_record')

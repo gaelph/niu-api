@@ -19,9 +19,10 @@ class AuthError extends Error {
  * @throws {AuthError}
  */
 function check(req) {
-  let authHeader = req.header("authorization")
+  let authHeader = req.headers.authorization
 
   if (!authHeader || authHeader !== `Bearer ${process.env.API_KEY}`) {
+    console.log(`auh failed on ${req.path} with auth header ${authHeader}`)
     throw new Unauthorized()
   }
 }

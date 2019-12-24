@@ -1,5 +1,3 @@
-# import Date from "./scalars.graphql"
-
 input TemperatureInput {
   value: Float!
 }
@@ -9,4 +7,14 @@ type TemperatureRecord {
   value: Float!,
   createdOn: Date!,
   modifiedOn: Date!
+}
+
+extend type Query {
+  getLatestTemperatureRecord: TemperatureRecord,
+  listTemperatureRecords(page: Int, pageSize: Int): [TemperatureRecord]!,
+  temperatureRecordsSince(data: Date): [TemperatureRecord]!
+}
+
+extend type Mutation {
+  createTemperatureRecord(value: Float!): TemperatureRecord
 }

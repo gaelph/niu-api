@@ -1,6 +1,3 @@
-#import Date from "./scalars.graphql"
-#import Days from "./scalars.graphql"
-
 type Time {
   hours: Int!,
   minutes: Int!
@@ -57,4 +54,14 @@ input UpdateRuleInput {
 
 input DeleteRuleInput {
   id: ID!
+}
+
+extend type Query {
+  listRules(page: Int, pageSize: Int): [Rule]!
+}
+
+extend type Mutation {
+  createRule(rule: CreateRuleInput): Rule
+  updateRule(rule: UpdateRuleInput): Rule
+  deleteRule(rule: DeleteRuleInput): Rule
 }

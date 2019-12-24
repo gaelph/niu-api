@@ -1,5 +1,3 @@
-# import Date from "./scalars.graphql"
-
 enum EventType {
   BOILER_STATUS
 }
@@ -15,4 +13,15 @@ type Event {
   value: String!,
   createdOn: Date!,
   modifiedOn: Date!
+}
+
+extend type Query {
+  getLatestEvent: Event,
+  getLatestEventType(type: EventType): Event,
+  getAllEvents(page: Int, pageSize: Int): [Event]!,
+  getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!,
+}
+
+extend type Mutation {
+  dispatchEvent(event: EventInput): Event
 }

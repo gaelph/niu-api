@@ -1,5 +1,3 @@
-#import Date from "./scalars.graphql"
-
 type Setting {
   id: ID!
   title: String
@@ -21,3 +19,11 @@ input UpdateSettingInput {
   value: String!
 }
 
+extend type Query {
+  listSettings: [Setting]!
+}
+
+extend type Mutation {
+  createSetting(setting: CreateSettingInput): Setting
+  updateSetting(setting: UpdateSettingInput): Setting
+}

@@ -1,5 +1,3 @@
-# import Date from "./scalars.graphql"
-
 type Hold {
   id: ID!
   value: Int!
@@ -17,4 +15,14 @@ input UpdateHoldInput {
   id: ID!
   value: Int!
   untilTime: Date
+}
+
+extend type Query {
+  getHold: Hold
+}
+
+extend type Mutation {
+  createHold(hold: CreateHoldInput): Hold
+  updateHold(hold: UpdateHoldInput): Hold
+  deleteHold(id: ID!): Hold
 }
