@@ -20,7 +20,7 @@
  */
 
 /** @type {Gstore} */
-const gstore = require('../store').getInstance()
+const gstore = require('../../store').getInstance()
 
 const { Schema } = gstore
 

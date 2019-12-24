@@ -4,13 +4,12 @@
  * @typedef {import("gstore-node/lib/types").EntityData<T>} EntityData
  */
 /**
- * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
+ * @typedef {import("./model").TemperatureRecord} TemperatureRecord
  */
 
-const { NotFound, RequestError } = require("../error")
+const { NotFound, RequestError, BadRequest, ServerError } = require("../../error")
 
-const TemperatureRecord = require('../models/temperature_record')
-const { BadRequest, ServerError } = require('../error')
+const TemperatureRecord = require('./model')
 
 async function create(value) {
   let saneValue

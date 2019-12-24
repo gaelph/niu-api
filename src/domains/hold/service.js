@@ -4,14 +4,14 @@
  * @typedef {import("gstore-node/lib/types").EntityData<T>} EntityData
  */
 /**
- * @typedef {import("../models/override").Override} Override
+ * @typedef {import("./model").Override} Override
  */
 
 /** */
 const axios = require('axios')
-const { NotFound, BadRequest } = require('../error')
+const { NotFound, BadRequest } = require('../../error')
 
-const Override = require('../models/override')
+const Override = require('./model')
 /**
  * @param {Object} value
  * @return {Promise<Override>}

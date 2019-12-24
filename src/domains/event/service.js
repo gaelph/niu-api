@@ -4,11 +4,11 @@
  * @typedef {import("gstore-node/lib/types").EntityData<T>} EntityData
  */
 /**
- * @typedef {import("../models/event").Event} Event
+ * @typedef {import("./model").Event} Event
  */
-const { NotFound, BadRequest } = require('../error')
+const { NotFound, BadRequest } = require('../../error')
 
-const Event = require('../models/event')
+const Event = require('./model')
 
 /**
  * Inserts an Even in db

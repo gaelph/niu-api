@@ -5,14 +5,14 @@
  */
 /**
  * @template T
- * @typedef {import("../models/temperature_record").TemperatureRecord} TemperatureRecord
+ * @typedef {import("./model").Rule} Rule
  */
 
 /** */
 const axios = require('axios')
-const { NotFound, BadRequest } = require('../error')
+const { NotFound, BadRequest } = require('../../error')
 
-const Rule = require('../models/rule')
+const Rule = require('./model')
 
 async function create(value) {
   let id = value.id

@@ -1,4 +1,5 @@
-const services = require('../services')
+//@ts-check
+const services = require('./services')
 
 const wrap = (maybeArray) => {
   let array;

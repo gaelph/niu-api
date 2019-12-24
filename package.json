@@ -7,6 +7,7 @@
     "@google-cloud/datastore": "^4.5.2",
     "apollo-server-cloud-functions": "^2.9.14",
     "axios": "^0.19.0",
+    "callsites": "^3.1.0",
     "dotenv": "^8.2.0",
     "graphql": "^14.5.8",
     "gstore-node": "^7.2.3"

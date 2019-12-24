@@ -14,7 +14,7 @@
   * @typedef {import("gstore-node/lib/model").Model<T>} Model
   */
 
- const gstore = require('../store').getInstance()
+ const gstore = require('../../store').getInstance()
 
  const { Schema } = gstore
 
