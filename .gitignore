@@ -3,3 +3,5 @@ node_modules
 .env.yml
 google-credentials.json
 test.js
+nohup.out
+coverage
