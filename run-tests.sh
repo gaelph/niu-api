@@ -24,8 +24,16 @@ run_tests() {
   return $?;
 }
 
+run_filtered_tests() {
+  NODE_ENV=test jest --env node -t $1
+}
+
 start_datastore_emulator;
-run_tests;
+if [ -z "$1" ]; then
+  run_tests;
+else
+  run_filtered_tests $1
+fi;
 SUCCESS=$?;
 stop_datastore_emulator;
 
