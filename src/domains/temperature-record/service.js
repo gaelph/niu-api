@@ -81,8 +81,28 @@ async function list({ page = 1, pageSize = 100 } = { page: 1, pageSize: 100 }) {
   }
 }
 
+async function temperatureRecordsSince(date) {
+  try {
+    let { entities: records } = await TemperatureRecord.list({
+      filters: [
+        ['createdOn', '>', date]
+      ],
+      order: {
+        property: 'createdOn', descending: true
+      },
+      limit: 300
+    })
+
+    return records
+  } catch (error) {
+    /* istanbul ignore next */
+    throw new ServerError(error.message)
+  }
+}
+
 module.exports = {
   createTemperatureRecord: create,
   getLatestTemperatureRecord: getLatest,
-  listTemperatureRecords: list
+  listTemperatureRecords: list,
+  temperatureRecordsSince
 }

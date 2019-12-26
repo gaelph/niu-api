@@ -12,6 +12,15 @@ module.exports = {
 
       return Service.listTemperatureRecords({ page, pageSize })
     },
+    temperatureRecordsSince: (_, arg) => {
+      const ThreeDaysAgo = new Date()
+      ThreeDaysAgo.setDate(ThreeDaysAgo.getDate() - 3)
+
+      const timestamp = arg.after ? +new Date(arg.after) : +ThreeDaysAgo
+      const date = new Date(timestamp)
+
+      return Service.temperatureRecordsSince(date)
+    }
   },
   Mutation: {
     createTemperatureRecord: (_, { value }) => {

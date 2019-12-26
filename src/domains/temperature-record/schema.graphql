@@ -12,7 +12,7 @@ type TemperatureRecord {
 extend type Query {
   getLatestTemperatureRecord: TemperatureRecord,
   listTemperatureRecords(page: Int, pageSize: Int): [TemperatureRecord]!,
-  temperatureRecordsSince(data: Date): [TemperatureRecord]!
+  temperatureRecordsSince(after: Date): [TemperatureRecord]!
 }
 
 extend type Mutation {

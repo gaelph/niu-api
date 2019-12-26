@@ -9,6 +9,9 @@ const headers = {
 const apiHandler = require('../../src')
 
 const { mockRequest, mockResponse } = require('../../tests/helpers/request-response')
+const graphQlRequestHelper = require('../../tests/helpers/graphql-request')
+const gql = graphQlRequestHelper(headers)
+
 const { waitUntilCalled } = require('../../tests/helpers/wait')
 const { isISODate } = require('../../tests/helpers/iso-date')
 
@@ -195,30 +198,40 @@ describe('Custom API TemperatureRecord', () => {
 
 
 describe('GraphQL Api TemperatureRecord', () => {
+  async function createTemperatureRecord() {
+      const createRequest = gql(`mutation($value: Float) {
+        createTemperatureRecord(value: $value)
+      }`, { value: 12.5 }
+    )
+    const createResponse = mockResponse()
+
+    await apiHandler(createRequest, createResponse)
+    await waitUntilCalled(createResponse.send)
+
+    return createResponse
+  }
+
+  beforeEach(async (done) => {
+    await createTemperatureRecord()
+
+    done()
+  })
+
   it('creates a TemperatureRecord', async () => {
-    const request = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `mutation($value: Float!) {
-          createTemperatureRecord(value: $value) {
-            id
-            value
-            createdOn
-            modifiedOn
-          }
-        }`,
-        variables: {
-          value: 12.5
+    const request = gql(`mutation($value: Float!) {
+        createTemperatureRecord(value: $value) {
+          id
+          value
+          createdOn
+          modifiedOn
         }
-      }
+      }`,
+      { value: 12.5 }
     )
 
     const response = mockResponse()
 
     await apiHandler(request, response)
-  
     await waitUntilCalled(response.send)
     
     // expect(response.status).not.toHaveBeenCalled()
@@ -238,16 +251,9 @@ describe('GraphQL Api TemperatureRecord', () => {
   })
 
   it('fails at createing a TemperatureRecord', async () => {
-    const request = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `mutation ($value: Float) {
-          createTemperatureRecord(value: $value)
-        }`,
-        variables: "12.5"
-      }
+    const request = gql(`mutation ($value: Float) {
+        createTemperatureRecord(value: $value)
+      }`, "12.5"
     )
 
     const response = mockResponse()
@@ -260,37 +266,15 @@ describe('GraphQL Api TemperatureRecord', () => {
   })
 
   it('gets the latest temperature record', async () => {
-    const createRequest = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `mutation ($value: Float) {
-          createTemperatureRecord(value: $value)
-        }`,
-        variables: 12.5
-        
-      }
-    )
-    const createResponse = mockResponse()
-    await apiHandler(createRequest, createResponse)
-    await waitUntilCalled(createResponse.send)
-
-    const request = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `query {
-          getLatestTemperatureRecord {
-            id
-            value
-            createdOn
-            modifiedOn
-          }
-        }`,
-        variables: {}
-      }
+    const request = gql(`query {
+        getLatestTemperatureRecord {
+          id
+          value
+          createdOn
+          modifiedOn
+        }
+      }`,
+      {}
     )
 
     const response = mockResponse()
@@ -315,36 +299,14 @@ describe('GraphQL Api TemperatureRecord', () => {
   })
 
   it('lists all temperature records, page 1 by 3', async () => {
-    const createRequest = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `mutation($value: Float) {
-          createTemperatureRecord(value: $value)
-        }`,
-        variables: { value: 12.5 }
-      }
-    )
-    const createResponse = mockResponse()
-    await apiHandler(createRequest, createResponse)
-    await waitUntilCalled(createResponse.send)
-
-    const request = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `query {
-          listTemperatureRecords(page: 1, pageSize: 3) {
-            id
-            value
-            createdOn
-            modifiedOn
-          }
-        }`,
-        variables: {}
-      }
+    const request = gql(`query {
+        listTemperatureRecords(page: 1, pageSize: 3) {
+          id
+          value
+          createdOn
+          modifiedOn
+        }
+      }`, {}
     )
 
     const response = mockResponse()
@@ -369,35 +331,14 @@ describe('GraphQL Api TemperatureRecord', () => {
   })
 
   it('lists all temperature records with default page settings', async () => {
-    const createRequest = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `mutation($value: Float) {
-          createTemperatureRecord(value: $value)
-        }`,
-        variables: { value: 12.5 }
-      }
-    )
-    const createResponse = mockResponse()
-    await apiHandler(createRequest, createResponse)
-    await waitUntilCalled(createResponse.send)
-
-    const request = mockRequest(
-      'POST',
-      '/graphql',
-      headers,
-      {
-        query: `query {
+    const request = gql(`query {
           listTemperatureRecords {
             id
             value
             createdOn
             modifiedOn
           }
-        }`
-      }
+        }`, {}
     )
 
     const response = mockResponse()
@@ -419,5 +360,74 @@ describe('GraphQL Api TemperatureRecord', () => {
       expect(isISODate(record.modifiedOn)).toBe(true)
 
     })
+  })
+
+  it('lists all temperature records after a date', async () => {
+    const aMinuteAgo = new Date()
+    aMinuteAgo.setMinutes(aMinuteAgo.getMinutes() - 1)
+
+    const response = mockResponse()
+    const request = gql(`query($after: Date) {
+      temperatureRecordsSince(after: $after) {
+        id
+        value
+        createdOn
+      }
+    }`, { after: aMinuteAgo.toISOString() })
+
+    await apiHandler(request, response)
+    await waitUntilCalled(response.send)
+    const { errors, data } = JSON.parse(response.send.mock.calls[0][0])
+
+    if (errors) {
+      errors.forEach(error => console.log(error.message))
+    }
+    expect(response.status).toHaveBeenCalledWith(200)
+    expect(response.send).toHaveBeenCalled()
+
+    expect(errors).not.toBeDefined()
+    expect(Array.isArray(data.temperatureRecordsSince)).toBe(true)
+
+    const { temperatureRecordsSince: records } = data
+
+    expect(records.every(record => {
+      const createdOn = +new Date(record.createdOn)
+      return createdOn > +aMinuteAgo
+    })).toBe(true)
+  })
+
+  it('lists all records within the previous 3 days if no date is provided', async () => {
+    const threeDaysAgo = new Date()
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
+
+    const response = mockResponse()
+    const request = gql(`query {
+      temperatureRecordsSince {
+        id
+        value
+        createdOn
+      }
+    }`, { })
+
+    await apiHandler(request, response)
+    await waitUntilCalled(response.send)
+    const { errors, data } = JSON.parse(response.send.mock.calls[0][0])
+
+    if (errors) {
+      errors.forEach(error => console.log(error.message))
+    }
+    expect(response.status).toHaveBeenCalledWith(200)
+    expect(response.send).toHaveBeenCalled()
+
+    expect(errors).not.toBeDefined()
+    expect(Array.isArray(data.temperatureRecordsSince)).toBe(true)
+
+    const { temperatureRecordsSince: records } = data
+
+    expect(records.every(record => {
+      const createdOn = +new Date(record.createdOn)
+      return createdOn > +threeDaysAgo
+    })).toBe(true)
+
   })
 })
