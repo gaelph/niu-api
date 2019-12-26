@@ -12,6 +12,7 @@ const methodCheck = req => {
 
 module.exports = async (req, res) => {
   try {
+    res.header('X-Api', 'Custom')
     methodCheck(req)
     auth.check(req)
     

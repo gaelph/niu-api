@@ -20,9 +20,9 @@ async function create(value) {
   delete value.createdOn
   delete value.modifiedOn
 
-  let override = new Event(Event.sanitize(value, undefined))
+  let event = new Event(Event.sanitize(value, undefined))
 
-  const { entityKey, entityData } = await override.save()
+  const { entityKey, entityData } = await event.save()
 
   return {
     ...entityData,
@@ -44,6 +44,7 @@ async function getLatest() {
     limit: 1
   })
 
+  /* istanbul ignore if */
   if (events.length === 0) {
     throw new NotFound('Event', 'latest')
   }
@@ -59,7 +60,7 @@ async function getLatest() {
  * @throws {BadRequest} when the type is unknown
  */
 async function getLatestByType({ type }) {
-  if (!Object.values(Event.Types).includes(type)) {
+  if (!type || !Object.values(Event.Types).includes(type)) {
     throw new BadRequest(`Invalid event type ${type}`)
   }
 
@@ -74,6 +75,7 @@ async function getLatestByType({ type }) {
     limit: 1
   })
 
+  /* istanbul ignore if */
   if (events.length === 0) {
     throw new NotFound(`Event.${type}`, 'latest')
   }
@@ -86,7 +88,7 @@ async function getLatestByType({ type }) {
  * @param {{ page: number, pageSize: number }} param A cursor parameter
  * @return {Promise<Event[]>}
  */
-async function getAll({ page, pageSize }) {
+async function getAll({ page = 1, pageSize = 100 } = { page: 1, pageSize: 100 }) {
   let { entities: events } = await Event.list({
     order: {
       property: 'modifiedOn',
@@ -105,9 +107,9 @@ async function getAll({ page, pageSize }) {
  * @return {Promise<Event[]>}
  * @throws {BadRequest} when the type is invalid
  */
-async function getAllByType({ type, page, pageSize }) {
-  if (!Object.values(Event.Types).includes(type)) {
-    throw new BadRequest('Invalid event type')
+async function getAllByType({ type, page = 1, pageSize = 100 }) {
+  if (!type || !Object.values(Event.Types).includes(type)) {
+    throw new BadRequest(`Invalid event type: "${type}"`)
   }
 
   let { entities: events } = await Event.list({
@@ -118,7 +120,7 @@ async function getAllByType({ type, page, pageSize }) {
       property: 'modifiedOn',
       descending: true
     },
-    offset: page * pageSize,
+    offset: (page - 1) * pageSize,
     limit: pageSize
   })
 

@@ -17,7 +17,5 @@ module.exports = (body) => {
   let func = Object.keys(body)[0]
   let args = wrap(body[func])
 
-  console.log('executing function', func, ...args)
-
   return services[func](...args)
 }

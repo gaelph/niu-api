@@ -7,13 +7,14 @@ type Hold {
 }
 
 input CreateHoldInput {
+  id: ID!
   value: Int!
   untilTime: Date!
 }
 
 input UpdateHoldInput {
   id: ID!
-  value: Int!
+  value: Int
   untilTime: Date
 }
 

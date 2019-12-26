@@ -48,12 +48,12 @@ async function update(value) {
   delete value.id
 
   try {
-    let rule = await Rule.get(id)
+    await Rule.get(id)
+  } catch (_) {
+    throw new NotFound('Rule', id)
+  }
 
-    if (rule == null) {
-      throw new NotFound('Rule', id)
-    }
-
+  try {
     let { entityKey, entityData } = await Rule.update(id, value, null, null, null, { replace: false })
 
     // Signal device(s)
@@ -69,16 +69,15 @@ async function update(value) {
     if (error.name && error.errors) {
       message = error.errors.map(({ message }) => message).join(' ')
     } 
-    console.log(JSON.stringify(message))
     throw new BadRequest(message)
   }
 
 }
 
 async function remove({ id }) {
-  let rule = await Rule.get(id)
-
-  if (!rule) {
+  try {
+    await Rule.get(id)
+  } catch (_) {
     throw new NotFound('Rule', id)
   }
   

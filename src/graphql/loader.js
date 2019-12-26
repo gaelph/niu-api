@@ -25,6 +25,5 @@ function load(paths) {
 }
 
 module.exports = {
-  read: read,
   load: load
 }

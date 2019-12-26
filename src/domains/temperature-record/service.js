@@ -17,6 +17,7 @@ async function create(value) {
     saneValue = TemperatureRecord.sanitize(value, undefined)
   }
   catch (error) {
+    /* istanbul ignore next */
     throw new BadRequest(error.message)
   }
 
@@ -47,6 +48,7 @@ async function getLatest() {
       limit: 1
     })
     
+    /* istanbul ignore if */
     if (records.length === 0) {
       let error = new NotFound('TemperatureRecord', 'latest')
       
@@ -57,11 +59,12 @@ async function getLatest() {
     return records[0]
   }
   catch (error) {
+    /* istanbul ignore next */
     throw new ServerError(error.message)
   }
 }
 
-async function list({ page = 1, pageSize = 100 }) {
+async function list({ page = 1, pageSize = 100 } = { page: 1, pageSize: 100 }) {
   try {
     let { entities: records } = await TemperatureRecord.list({
       order: { 
@@ -73,6 +76,7 @@ async function list({ page = 1, pageSize = 100 }) {
 
     return records
   } catch (error) {
+    /* istanbul ignore next */
     throw new ServerError(error.message)
   }
 }

@@ -5,14 +5,6 @@ const process = require('process')
 
 const { Unauthorized } = require('../error')
 
-class AuthError extends Error {
-  constructor() {
-    super("Unauthorized")
-
-    this.status = 401
-  }
-}
-
 /**
  * 
  * @param {Request} req 

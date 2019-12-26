@@ -67,10 +67,10 @@
      }
    } catch (error) {
      let message = error.message
+     /* istanbul ignore next */
      if (error.name && error.errors) {
        message = error.errors.map(({ message }) => message).join(' ')
      } 
-     console.log(JSON.stringify(message))
      throw new BadRequest(message)
    }
  }

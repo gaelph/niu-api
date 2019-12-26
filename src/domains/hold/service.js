@@ -63,7 +63,6 @@ async function update(value) {
       return await create(value)
     }
     delete value.id
-    console.log("update Override", id, value.value)
 
     let { entityKey, entityData } = await Override.update(id, value, null, null, null, { replace: false })
 
@@ -77,18 +76,18 @@ async function update(value) {
     }
   } catch (error) {
     let message = error.message
+    /* istanbul ignore else */
     if (error.name && error.errors) {
       message = error.errors.map(({ message }) => message).join(' ')
     } 
-    console.log(JSON.stringify(message))
     throw new BadRequest(message)
   }
 }
 
 async function remove({ id }) {
-  let override = await Override.get(id)
-
-  if (!override) {
+  try {
+    await Override.get(id)
+  } catch (_) {
     throw new NotFound('Override', id)
   }
   

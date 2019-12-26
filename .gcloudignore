@@ -15,3 +15,7 @@
 
 node_modules
 .env.yml
+.env-test
+.vscode
+tests
+coverage

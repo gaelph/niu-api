@@ -38,6 +38,10 @@ module.exports = class ServerBuilder {
   
     if (fs.existsSync(absPath)) {
       const Schema = path.join(absPath, 'schema.graphql')
+      /** 
+       * @const Resolver
+       * @type {Object<string, *>}
+       */
       const Resolver = require(path.join(absPath, 'resolver'))
 
       if (!fs.existsSync(Schema)) {
@@ -50,7 +54,9 @@ module.exports = class ServerBuilder {
   
       this.gqlFiles.push(Schema)
   
-      Object.keys(Resolver).forEach(key => {
+      Object.keys(Resolver).forEach(
+        /** @param {string} key */
+        key => {
         if (key === 'Query') {
           this.resolvers.Query = {
             ...this.resolvers.Query,

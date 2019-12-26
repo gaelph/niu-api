@@ -1,10 +1,9 @@
 const ServerBuilder = require('./builder')
-const auth = require('../lib/auth')
 
 const GraphQLServer = ServerBuilder
   .new()
-  .setContext((req, res) => {
-    auth.check()
+  .setContext(({ req, res }) => {
+    res.header('X-Api', 'GraphQL')
 
     return { req, res }
   })

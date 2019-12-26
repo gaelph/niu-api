@@ -2,7 +2,7 @@ const Service = require('./service')
 
 module.exports = {
   Query: {
-    listRules: (_, { page = 1, pageSize = 100 }) => {
+    listRules: (_, { page = 1, pageSize = 100 } = {}) => {
       return Service.listRules({ page, pageSize })
     },
   },

@@ -16,7 +16,7 @@ module.exports = {
     },
   },
   Mutation: {
-    dispatchEvent: (_, { type, value }) => {
+    dispatchEvent: (_, { event: { type, value } }) => {
       return Service.dispatchEvent({ type, value })
     },
   },
