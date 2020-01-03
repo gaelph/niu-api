@@ -29,7 +29,7 @@
     }
   },
   "jest": {
-    "silent": false,
+    "silent": true,
     "testEnvironment": "node",
     "collectCoverage": true,
     "collectCoverageFrom": [
