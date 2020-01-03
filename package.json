@@ -15,7 +15,8 @@
   "scripts": {
     "test": "sh ./run-tests.sh",
     "update-index": "export $(egrep -v '^#' $PWD/.env | xargs); gcloud datastore indexes create $PWD/index.yaml --project=$PROJECT",
-    "deploy": "export $(egrep -v '^#' $PWD/.env | xargs); yarn test && gcloud functions deploy niu --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region europe-west1 --project $PROJECT"
+    "deploy": "export $(egrep -v '^#' $PWD/.env | xargs); yarn test && gcloud functions deploy niu --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region europe-west1 --project $PROJECT",
+    "deploy:no-test": "export $(egrep -v '^#' $PWD/.env | xargs); gcloud functions deploy niu --env-vars-file .env.yml --trigger-http --runtime nodejs10 --region europe-west1 --project $PROJECT"
   },
   "devDependencies": {
     "@types/express": "^4.17.2",
@@ -28,7 +29,7 @@
     }
   },
   "jest": {
-    "silent": true,
+    "silent": false,
     "testEnvironment": "node",
     "collectCoverage": true,
     "collectCoverageFrom": [
