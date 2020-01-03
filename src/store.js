@@ -5,8 +5,10 @@ const INSTANCE_ID = 'nezh-datastore';
 
 module.exports.init = function init(projectId) {
   const gstore = new Gstore();
+  const namespace = process.env.NODE_ENV === 'test' ? 'test' : undefined;
   const datastore = new Datastore({
       projectId: projectId,
+      namespace
   });
   
   gstore.connect(datastore);
