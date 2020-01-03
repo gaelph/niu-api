@@ -85,39 +85,48 @@ async function getLatestByType({ type }) {
 
 /**
  * Gets a paginated list of all events
- * @param {{ page: number, pageSize: number }} param A cursor parameter
+ * @param {{ page: number, pageSize: number, after: Date }} param A cursor parameter
  * @return {Promise<Event[]>}
  */
-async function getAll({ page = 1, pageSize = 100 } = { page: 1, pageSize: 100 }) {
-  let { entities: events } = await Event.list({
+async function getAll({ page = 1, pageSize = 100, after = new Date(0) } = { page: 1, pageSize: 100, after: new Date(0)}) {
+  let options = {
     order: {
-      property: 'modifiedOn',
+      property: 'createdOn',
       descending: true
     },
+    filters: [
+      ["createdOn", ">", after]
+    ],
     offset: (page - 1) * pageSize,
     limit: pageSize
-  })
+  }
+
+  console.log(options)
+
+  // @ts-ignore
+  let { entities: events } = await Event.list(options)
 
   return events
 }
 
 /**
  * Gets a paginated list of all events of a given type
- * @param {{ type: string, page: number, pageSize: number }} param A cursor parameter and a type
+ * @param {{ type: string, page: number, pageSize: number, after: Date}} param A cursor parameter and a type
  * @return {Promise<Event[]>}
  * @throws {BadRequest} when the type is invalid
  */
-async function getAllByType({ type, page = 1, pageSize = 100 }) {
+async function getAllByType({ type, page = 1, pageSize = 100, after = new Date(0) }) {
   if (!type || !Object.values(Event.Types).includes(type)) {
     throw new BadRequest(`Invalid event type: "${type}"`)
   }
 
   let { entities: events } = await Event.list({
     filters: [
-      [ 'type', type ]
+      [ 'type', type ],
+      [ 'createdOn', '>', after]
     ],
     order: {
-      property: 'modifiedOn',
+      property: 'createdOn',
       descending: true
     },
     offset: (page - 1) * pageSize,

@@ -87,7 +87,7 @@ async function remove({ id }) {
   // no need to await the result
   send_rules_to_device()
 
-  return
+  return { id }
 }
 
 async function send_rules_to_device() {

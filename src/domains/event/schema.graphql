@@ -18,8 +18,8 @@ type Event {
 extend type Query {
   getLatestEvent: Event,
   getLatestEventType(type: EventType): Event,
-  getAllEvents(page: Int, pageSize: Int): [Event]!,
-  getAllEventsType(type: EventType, page: Int, pageSize: Int): [Event]!,
+  getAllEvents(page: Int, pageSize: Int, after: Date): [Event]!,
+  getAllEventsType(type: EventType, page: Int, pageSize: Int, after: Date): [Event]!,
 }
 
 extend type Mutation {

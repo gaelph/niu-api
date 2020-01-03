@@ -8,11 +8,11 @@ module.exports = {
     getLatestEventType: (_, { type }) => {
       return Service.getLatestEventType({ type })
     },
-    getAllEvents: (_, { page = 1, pageSize = 100 }) => {
-      return Service.getAllEvents({ page, pageSize })
+    getAllEvents: (_, { page = 1, pageSize = 100, after = new Date(0) }) => {
+      return Service.getAllEvents({ page, pageSize, after })
     },
-    getAllEventsType: (_, { type, page = 1, pageSize = 100 }) => {
-      return Service.getAllEventsType({ type, page, pageSize })
+    getAllEventsType: (_, { type, page = 1, pageSize = 100, after = new Date(0) }) => {
+      return Service.getAllEventsType({ type, page, pageSize, after })
     },
   },
   Mutation: {

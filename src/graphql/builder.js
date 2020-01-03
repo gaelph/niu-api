@@ -90,6 +90,10 @@ module.exports = class ServerBuilder {
     return this
   }
 
+  schema() {
+    return loader.load(this.gqlFiles)
+  }
+
   create() {
     const Schema = loader.load(this.gqlFiles)
     const typeDefs = gql(Schema)

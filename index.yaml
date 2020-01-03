@@ -5,3 +5,11 @@ indexes:
   - name: type
   - name: modifiedOn
     direction: desc
+  - name: createdOn
+    direction: desc
+
+- kind: Event
+  properties: 
+  - name: type
+  - name: createdOn
+    direction: desc
